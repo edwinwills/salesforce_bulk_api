@@ -35,7 +35,13 @@ module SalesforceBulkApi
       begin
         @job_id = response_parsed['jobInfo']['id']
       rescue NoMethodError => e
-        Rails.logger.error "SalesforceBulkApi: #{response_parsed['error']['exceptionCode']}: #{response_parsed['error']['exceptionMessage']}"
+        errors = {
+          response: response,
+          xml: xml,
+          exception: e
+        }
+
+        Bugsnag.notify(errors)
       end
     end
 
